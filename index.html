@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyperFX — FX Settlement Cost Calculator</title>
+<meta name="description" content="Calculate how much your naira float is really costing you — and what on-demand FX liquidity could save. Built for cross-border fintech teams.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inconsolata:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #080600;
+    --bg2:      #110e00;
+    --bg3:      #1a1600;
+    --card:     #1f1900;
+    --border:   rgba(251,191,36,0.1);
+    --border2:  rgba(251,191,36,0.22);
+    --amber:    #f59e0b;
+    --amber2:   #fbbf24;
+    --amber3:   #fcd34d;
+    --text:     #fef9e7;
+    --muted:    #78716c;
+    --muted2:   #a8a29e;
+    --green:    #4ade80;
+    --green2:   #86efac;
+    --red:      #f87171;
+    --red2:     #fca5a5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,6,0,0.95);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Inconsolata', monospace;
+    font-size: 14px; font-weight: 600;
+    color: var(--amber); letter-spacing: 0.06em;
+  }
+  .nav-tag {
+    font-size: 12px; color: var(--muted2);
+    background: rgba(251,191,36,0.06);
+    border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 100px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    max-width: 900px; margin: 0 auto;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff8e7; margin-bottom: 1rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--amber); }
+  .hero-sub {
+    font-size: 1rem; font-weight: 300;
+    color: var(--muted2); max-width: 540px;
+    margin: 0 auto 1.5rem; line-height: 1.7;
+  }
+  .context-bar {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 13px; color: var(--red2);
+    margin-bottom: 0;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 900px; margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; align-items: start;
+  }
+  @media (max-width: 640px) { .main { grid-template-columns: 1fr; } }
+
+  /* ── PANELS ── */
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .panel-header {
+    padding: 1rem 1.25rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 4px;
+  }
+  .panel-title {
+    font-size: 15px; font-weight: 600; color: #fff8e7;
+  }
+  .panel-body { padding: 1.25rem; }
+
+  /* ── INPUTS ── */
+  .field { margin-bottom: 1.5rem; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .field-name {
+    font-size: 13px; font-weight: 500; color: var(--muted2);
+  }
+  .field-value {
+    font-family: 'Inconsolata', monospace;
+    font-size: 14px; font-weight: 600; color: var(--amber);
+    background: rgba(251,191,36,0.08);
+    padding: 2px 10px; border-radius: 6px;
+    min-width: 80px; text-align: right;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 4px; outline: none;
+    background: rgba(251,191,36,0.15);
+    border-radius: 2px; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--amber); border: none;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--amber); border: none; cursor: pointer;
+  }
+
+  .range-ticks {
+    display: flex; justify-content: space-between;
+    margin-top: 4px;
+  }
+  .tick { font-family: 'Inconsolata', monospace; font-size: 10px; color: var(--muted); }
+
+  select {
+    width: 100%; padding: 8px 12px;
+    background: rgba(251,191,36,0.06);
+    border: 1px solid var(--border2);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; cursor: pointer; outline: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  select:focus { border-color: var(--amber); }
+  select option { background: #1a1600; }
+
+  .field-note { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* ── RESULTS ── */
+  .result-card {
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.1rem;
+    margin-bottom: 0.85rem;
+  }
+  .result-card:last-of-type { margin-bottom: 0; }
+  .result-card.negative { border-color: rgba(248,113,113,0.25); background: rgba(248,113,113,0.04); }
+  .result-card.positive { border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.04); }
+  .result-card.neutral  { border-color: var(--border2); background: rgba(251,191,36,0.04); }
+
+  .result-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .result-card.negative .result-label { color: var(--red); }
+  .result-card.positive .result-label { color: var(--green); }
+  .result-card.neutral  .result-label { color: var(--amber2); }
+
+  .result-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem; font-weight: 700; line-height: 1;
+    margin-bottom: 4px;
+    transition: all 0.25s ease;
+  }
+  .result-card.negative .result-num { color: var(--red2); }
+  .result-card.positive .result-num { color: var(--green2); }
+  .result-card.neutral  .result-num { color: var(--amber3); }
+
+  .result-desc { font-size: 12px; color: var(--muted2); line-height: 1.5; }
+
+  .divider-line {
+    border: none; border-top: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+
+  /* ── ASSUMPTION PILLS ── */
+  .assumptions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 1rem;
+  }
+  .assumption-pill {
+    font-family: 'Inconsolata', monospace;
+    font-size: 10.5px; padding: 3px 9px;
+    border-radius: 100px; color: var(--muted2);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  /* ── EXPLAINER ── */
+  .explainer {
+    max-width: 900px; margin: 0 auto;
+    padding: 0 2rem 2rem;
+  }
+  .explainer-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 640px) { .explainer-grid { grid-template-columns: 1fr; } }
+  .explainer-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.1rem;
+  }
+  .explainer-num {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px; color: var(--amber); margin-bottom: 6px;
+  }
+  .explainer-title { font-size: 13.5px; font-weight: 600; color: #fff8e7; margin-bottom: 4px; }
+  .explainer-body { font-size: 12.5px; color: var(--muted2); line-height: 1.55; }
+
+  /* ── CTA ── */
+  .cta-block {
+    max-width: 900px; margin: 0 auto;
+    padding: 0 2rem 5rem;
+  }
+  .cta-inner {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 14px; padding: 2.5rem;
+    text-align: center;
+  }
+  .cta-inner h2 {
+    font-size: 1.5rem; font-weight: 700;
+    color: #fff8e7; margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .cta-inner h2 em { font-style: normal; color: var(--amber); }
+  .cta-inner p { font-size: 14px; color: var(--muted2); margin-bottom: 1.5rem; font-weight: 300; }
+
+  .waitlist-form { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; max-width: 480px; margin: 0 auto; }
+  .waitlist-form input[type=text],
+  .waitlist-form input[type=email] {
+    flex: 1; min-width: 180px; padding: 10px 14px;
+    background: rgba(251,191,36,0.06);
+    border: 1px solid var(--border2); border-radius: 8px;
+    color: var(--text); font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; outline: none;
+  }
+  .waitlist-form input:focus { border-color: var(--amber); }
+  .waitlist-form input::placeholder { color: var(--muted); }
+  .btn-amber {
+    padding: 10px 24px; border-radius: 8px;
+    background: var(--amber); color: #080600;
+    font-family: 'Inconsolata', monospace;
+    font-size: 13px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-amber:hover { opacity: 0.88; }
+
+  .success-msg {
+    display: none; color: var(--green2);
+    font-family: 'Inconsolata', monospace;
+    font-size: 13px; margin-top: 0.75rem;
+  }
+
+  .privacy-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem; text-align: center;
+    font-family: 'Inconsolata', monospace;
+    font-size: 12px; color: var(--muted);
+  }
+  footer a { color: var(--amber); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .hero { padding: 2.5rem 1.25rem 1.5rem; }
+    .main { padding: 1.5rem 1.25rem 3rem; }
+    .explainer { padding: 0 1.25rem 1.5rem; }
+    .cta-block { padding: 0 1.25rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">HyperFX</span>
+  <span class="nav-tag">by Polytope Labs</span>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">FX Settlement Cost Calculator</p>
+  <h1>How much is your float<br><em>actually costing you?</em></h1>
+  <p class="hero-sub">Cross-border fintechs lock millions in naira float accounts before processing a single transaction. With naira losing over 70% of its value against the dollar in two years, that float isn't just idle — it's eroding.</p>
+  <div class="context-bar">
+    <span>NGN lost ~70% vs USD between 2023–2025</span>
+  </div>
+</div>
+
+<div class="main">
+  <!-- INPUTS -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-label">Your numbers</div>
+      <div class="panel-title">Enter your situation</div>
+    </div>
+    <div class="panel-body">
+
+      <div class="field">
+        <div class="field-label">
+          <span class="field-name">Monthly transaction volume</span>
+          <span class="field-value" id="vol-display">$1,000,000</span>
+        </div>
+        <input type="range" id="volume" min="100000" max="20000000" step="100000" value="1000000">
+        <div class="range-ticks">
+          <span class="tick">$100K</span>
+          <span class="tick">$5M</span>
+          <span class="tick">$10M</span>
+          <span class="tick">$20M</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <span class="field-name">Float as % of monthly volume</span>
+          <span class="field-value" id="float-display">30%</span>
+        </div>
+        <input type="range" id="float-pct" min="5" max="80" step="5" value="30">
+        <div class="range-ticks">
+          <span class="tick">5%</span>
+          <span class="tick">20%</span>
+          <span class="tick">50%</span>
+          <span class="tick">80%</span>
+        </div>
+        <p class="field-note">Typical cross-border fintech holds 20–40% of monthly volume as float to ensure smooth payouts.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <span class="field-name">Annual naira devaluation rate</span>
+          <span class="field-value" id="deval-display">35%</span>
+        </div>
+        <input type="range" id="deval" min="5" max="80" step="5" value="35">
+        <div class="range-ticks">
+          <span class="tick">5%</span>
+          <span class="tick">25%</span>
+          <span class="tick">50%</span>
+          <span class="tick">80%</span>
+        </div>
+        <p class="field-note">The naira lost ~70% of its value vs USD between 2023 and 2025. 35% is a conservative annual estimate.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <span class="field-name">Primary corridor</span>
+        </div>
+        <select id="corridor">
+          <option value="GBP">UK → Nigeria (GBP to NGN)</option>
+          <option value="USD">US → Nigeria (USD to NGN)</option>
+          <option value="EUR">EU → Nigeria (EUR to NGN)</option>
+          <option value="CAD">Canada → Nigeria (CAD to NGN)</option>
+        </select>
+      </div>
+
+      <div class="assumptions">
+        <span class="assumption-pill">Float held in NGN</span>
+        <span class="assumption-pill">Annual devaluation compound</span>
+        <span class="assumption-pill">No yield on float</span>
+        <span class="assumption-pill">Constant volume</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div>
+    <div class="panel" style="margin-bottom:1rem;">
+      <div class="panel-header">
+        <div class="panel-label">Your current situation</div>
+        <div class="panel-title">What the float model costs you</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="result-card negative">
+          <div class="result-label">Capital locked in float</div>
+          <div class="result-num" id="float-locked">$300,000</div>
+          <div class="result-desc">Sitting in a Nigerian bank account, doing nothing — unavailable for growth, product, or operations.</div>
+        </div>
+
+        <div class="result-card negative">
+          <div class="result-label">Value lost to devaluation (12 months)</div>
+          <div class="result-num" id="deval-loss">$105,000</div>
+          <div class="result-desc">What your naira float loses in real USD value over the next year at your chosen devaluation rate.</div>
+        </div>
+
+        <div class="result-card negative">
+          <div class="result-label">Effective cost per transaction</div>
+          <div class="result-num" id="cost-per-tx">1.05%</div>
+          <div class="result-desc">The hidden cost of devaluation as a percentage of your transaction volume — before fees, before FX spreads.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-label">With HyperFX</div>
+        <div class="panel-title">What changes</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="result-card positive">
+          <div class="result-label">Capital unlocked</div>
+          <div class="result-num" id="capital-freed">$300,000</div>
+          <div class="result-desc">No pre-funding required. Zero float held. That capital goes back to your balance sheet.</div>
+        </div>
+
+        <div class="result-card positive">
+          <div class="result-label">Devaluation exposure eliminated</div>
+          <div class="result-num" id="deval-saved">$105,000</div>
+          <div class="result-desc">Stablecoin settlement means you never hold naira. Your devaluation loss drops to zero.</div>
+        </div>
+
+        <div class="result-card neutral">
+          <div class="result-label">Total 12-month benefit</div>
+          <div class="result-num" id="total-benefit">$405,000</div>
+          <div class="result-desc">Capital unlocked plus devaluation losses avoided. Real money back in your business.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="explainer">
+  <div class="explainer-grid">
+    <div class="explainer-card">
+      <div class="explainer-num">01 — The problem</div>
+      <div class="explainer-title">You fund before you transact</div>
+      <div class="explainer-body">To pay out naira in Nigeria, you need naira in a Nigerian bank account before the transaction happens. That float is locked up, earning nothing, and losing value every day the naira moves.</div>
+    </div>
+    <div class="explainer-card">
+      <div class="explainer-num">02 — The HyperFX approach</div>
+      <div class="explainer-title">Match liquidity on demand</div>
+      <div class="explainer-body">Instead of pre-funding, HyperFX matches your USDT or USDC to cNGN liquidity at the moment of transaction. USD → USDT → cNGN → naira bank account. No float. No devaluation exposure.</div>
+    </div>
+    <div class="explainer-card">
+      <div class="explainer-num">03 — The result</div>
+      <div class="explainer-title">Capital back in your business</div>
+      <div class="explainer-body">Your working capital stays on your balance sheet. Your settlements remain CBN-compliant. Your FX ops team stops manually managing LP relationships. You scale without the float overhead.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-inner">
+    <h2>Ready to stop funding<br><em>Nigeria before you transact?</em></h2>
+    <p>Join the HyperFX waitlist. We are working with select fintech partners ahead of launch.</p>
+    <div class="waitlist-form" id="waitlist-form">
+      <input type="text"  id="company" placeholder="Company name">
+      <input type="email" id="email"   placeholder="Work email">
+      <button class="btn-amber" onclick="handleSubmit()">Join waitlist</button>
+    </div>
+    <p class="success-msg" id="success-msg">You are on the list. We will be in touch shortly.</p>
+    <p class="privacy-note">No spam. We will reach out when HyperFX is ready for onboarding.</p>
+  </div>
+</div>
+
+<footer>
+  <p>HyperFX is built by <a href="https://polytope.technology" target="_blank" rel="noopener">Polytope Labs</a> — the team behind Hyperbridge.</p>
+  <p style="margin-top:5px; font-size:11px;">This calculator was built as part of a marketing portfolio by Josephine Inika. Numbers are illustrative based on publicly available naira devaluation data.</p>
+</footer>
+
+<script>
+  function fmt(n) {
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
+    if (n >= 1000) return '$' + Math.round(n).toLocaleString();
+    return '$' + n.toFixed(0);
+  }
+
+  function fmtPct(n) { return n.toFixed(2) + '%'; }
+
+  function calc() {
+    const vol     = parseInt(document.getElementById('volume').value);
+    const floatP  = parseInt(document.getElementById('float-pct').value) / 100;
+    const devalP  = parseInt(document.getElementById('deval').value) / 100;
+
+    const floatAmt    = vol * floatP;
+    const devalLoss   = floatAmt * devalP;
+    const costPerTx   = (devalLoss / (vol * 12)) * 100;
+    const totalBenefit = floatAmt + devalLoss;
+
+    document.getElementById('float-locked').textContent  = fmt(floatAmt);
+    document.getElementById('deval-loss').textContent    = fmt(devalLoss);
+    document.getElementById('cost-per-tx').textContent   = fmtPct(costPerTx);
+    document.getElementById('capital-freed').textContent = fmt(floatAmt);
+    document.getElementById('deval-saved').textContent   = fmt(devalLoss);
+    document.getElementById('total-benefit').textContent = fmt(totalBenefit);
+  }
+
+  document.getElementById('volume').addEventListener('input', function() {
+    const v = parseInt(this.value);
+    document.getElementById('vol-display').textContent = fmt(v);
+    calc();
+  });
+
+  document.getElementById('float-pct').addEventListener('input', function() {
+    document.getElementById('float-display').textContent = this.value + '%';
+    calc();
+  });
+
+  document.getElementById('deval').addEventListener('input', function() {
+    document.getElementById('deval-display').textContent = this.value + '%';
+    calc();
+  });
+
+  document.getElementById('corridor').addEventListener('change', calc);
+
+  function handleSubmit() {
+    const company = document.getElementById('company').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    if (!company || !email) return;
+    document.getElementById('waitlist-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  }
+
+  calc();
+</script>
+
+</body>
+</html>
