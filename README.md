@@ -27,9 +27,7 @@ Below the calculator: a plain-English explainer of the float problem and how Hyp
 
 ## Why this format
 
-A whitepaper explains the problem. A calculator makes the CFO feel it.
-
-The goal was to build something a fintech Head of Payments could share with their CFO in a Slack message — "put in your numbers and tell me what you think." That forward-ability is the whole point.
+The goal was to build something a fintech Head of Payments could share with their CFO in a Slack message — "put in your numbers and tell me what you think." 
 
 ## Tech
 
@@ -42,11 +40,7 @@ Single-file HTML. No dependencies, no framework, no build step. All calculations
 3. Set source to `main` branch, `/ (root)`
 4. Your site will be live at `https://yourusername.github.io/hyperfx-calculator`
 
-## Design decisions
 
-- Dark amber/gold palette — warm and premium, deliberately different from the cold blue of most fintech tools. The warmth signals Africa and approachability without sacrificing professionalism
-- Space Grotesk for body — clean, modern, legible at small sizes. Inconsolata for data labels — signals precision and technical credibility without being intimidating
-- Inputs on the left, outputs on the right — mirrors the mental model of "I put in my situation, I get out my answer"
 - Negative results (costs) in red, positive results (savings) in green — immediate visual language that needs no explanation
 - No login, no data sent anywhere — a CFO will not enter real company data into a tool that requires an account
 
