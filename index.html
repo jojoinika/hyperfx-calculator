@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HyperFX — FX Settlement Cost Calculator</title>
-<meta name="description" content="Calculate how much your naira float is really costing you — and what on-demand FX liquidity could save. Built for cross-border fintech teams.">
+<meta name="description" content="Calculate how much your naira float is really costing you — and what HyperFX could save you.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inconsolata:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -325,8 +325,8 @@
 
 <div class="hero">
   <p class="hero-eyebrow">FX Settlement Cost Calculator</p>
-  <h1>How much is your float<br><em>actually costing you?</em></h1>
-  <p class="hero-sub">Cross-border fintechs lock millions in naira float accounts before processing a single transaction. With naira losing over 70% of its value against the dollar in two years, that float isn't just idle — it's eroding.</p>
+  <h1>How much is your float<br><em>costing you?</em></h1>
+  <p class="hero-sub">Cross-border fintechs lock millions in naira float accounts before processing a single transaction. With naira losing over 70% of its value against the dollar in two years, that float is also depreciating.</p>
   <div class="context-bar">
     <span>NGN lost ~70% vs USD between 2023–2025</span>
   </div>
@@ -397,12 +397,6 @@
         </select>
       </div>
 
-      <div class="assumptions">
-        <span class="assumption-pill">Float held in NGN</span>
-        <span class="assumption-pill">Annual devaluation compound</span>
-        <span class="assumption-pill">No yield on float</span>
-        <span class="assumption-pill">Constant volume</span>
-      </div>
 
     </div>
   </div>
@@ -419,7 +413,7 @@
         <div class="result-card negative">
           <div class="result-label">Capital locked in float</div>
           <div class="result-num" id="float-locked">$300,000</div>
-          <div class="result-desc">Sitting in a Nigerian bank account, doing nothing — unavailable for growth, product, or operations.</div>
+          <div class="result-desc">Sitting in a Nigerian bank account,unavailable for growth, product, or operations.</div>
         </div>
 
         <div class="result-card negative">
@@ -431,7 +425,7 @@
         <div class="result-card negative">
           <div class="result-label">Effective cost per transaction</div>
           <div class="result-num" id="cost-per-tx">1.05%</div>
-          <div class="result-desc">The hidden cost of devaluation as a percentage of your transaction volume — before fees, before FX spreads.</div>
+          <div class="result-desc">The hidden cost of devaluation as a percentage of your transaction volume before fees and FX spreads.</div>
         </div>
 
       </div>
@@ -453,7 +447,7 @@
         <div class="result-card positive">
           <div class="result-label">Devaluation exposure eliminated</div>
           <div class="result-num" id="deval-saved">$105,000</div>
-          <div class="result-desc">Stablecoin settlement means you never hold naira. Your devaluation loss drops to zero.</div>
+          <div class="result-desc">Stablecoin settlement means your devaluation loss drops to zero.</div>
         </div>
 
         <div class="result-card neutral">
@@ -478,12 +472,12 @@
     <div class="explainer-card">
       <div class="explainer-num">02 — The HyperFX approach</div>
       <div class="explainer-title">Match liquidity on demand</div>
-      <div class="explainer-body">Instead of pre-funding, HyperFX matches your USDT or USDC to cNGN liquidity at the moment of transaction. USD → USDT → cNGN → naira bank account. No float. No devaluation exposure.</div>
+      <div class="explainer-body">Instead of pre-funding, HyperFX matches your USDT or USDC to cNGN liquidity at the moment of transaction. USD → USDT → cNGN → naira bank account.</div>
     </div>
     <div class="explainer-card">
       <div class="explainer-num">03 — The result</div>
       <div class="explainer-title">Capital back in your business</div>
-      <div class="explainer-body">Your working capital stays on your balance sheet. Your settlements remain CBN-compliant. Your FX ops team stops manually managing LP relationships. You scale without the float overhead.</div>
+      <div class="explainer-body">Your working capital stays on your balance sheet. Your settlements remain CBN-compliant. Your FX ops team stops manually managing LP relationships. You can now scale without the float overhead.</div>
     </div>
   </div>
 </div>
@@ -491,15 +485,14 @@
 <!-- CTA -->
 <div class="cta-block">
   <div class="cta-inner">
-    <h2>Ready to stop funding<br><em>Nigeria before you transact?</em></h2>
+    <h2>We are working with select fintech partners ahead of launch<br><em>Get early access</em></h2>
     <p>Join the HyperFX waitlist. We are working with select fintech partners ahead of launch.</p>
     <div class="waitlist-form" id="waitlist-form">
       <input type="text"  id="company" placeholder="Company name">
       <input type="email" id="email"   placeholder="Work email">
-      <button class="btn-amber" onclick="handleSubmit()">Join waitlist</button>
+      <button class="btn-amber" onclick="handleSubmit()">I'm in.</button>
     </div>
-    <p class="success-msg" id="success-msg">You are on the list. We will be in touch shortly.</p>
-    <p class="privacy-note">No spam. We will reach out when HyperFX is ready for onboarding.</p>
+    <p class="success-msg" id="success-msg">hank you for signing up! Know someone else who needs this? Forward it to them.</p>
   </div>
 </div>
 
