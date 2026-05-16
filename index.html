@@ -10,18 +10,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inconsolata:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #080600;
-    --bg2:      #110e00;
-    --bg3:      #1a1600;
-    --card:     #1f1900;
-    --border:   rgba(251,191,36,0.1);
-    --border2:  rgba(251,191,36,0.22);
+    --bg:       #08080f;
+    --bg2:      #0e0e1a;
+    --bg3:      #141424;
+    --card:     #11111e;
+    --border:   rgba(167,139,250,0.1);
+    --border2:  rgba(167,139,250,0.22);
+    --purple:   #a78bfa;
+    --purple2:  #c4b5fd;
+    --purple3:  #ddd6fe;
     --amber:    #f59e0b;
     --amber2:   #fbbf24;
     --amber3:   #fcd34d;
-    --text:     #fef9e7;
-    --muted:    #78716c;
-    --muted2:   #a8a29e;
+    --text:     #ede9fe;
+    --muted:    #6b6b8a;
+    --muted2:   #9d9db8;
     --green:    #4ade80;
     --green2:   #86efac;
     --red:      #f87171;
@@ -44,17 +47,17 @@
     justify-content: space-between;
     padding: 0 2rem; height: 56px;
     border-bottom: 1px solid var(--border);
-    background: rgba(8,6,0,0.95);
+    background: rgba(8,8,15,0.95);
     position: sticky; top: 0; z-index: 100;
   }
   .nav-logo {
     font-family: 'Inconsolata', monospace;
     font-size: 14px; font-weight: 600;
-    color: var(--amber); letter-spacing: 0.06em;
+    color: var(--purple); letter-spacing: 0.06em;
   }
   .nav-tag {
     font-size: 12px; color: var(--muted2);
-    background: rgba(251,191,36,0.06);
+    background: rgba(167,139,250,0.06);
     border: 1px solid var(--border);
     padding: 3px 10px; border-radius: 100px;
   }
@@ -68,14 +71,14 @@
   .hero-eyebrow {
     font-family: 'Inconsolata', monospace;
     font-size: 11px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--amber);
+    text-transform: uppercase; color: var(--purple);
     margin-bottom: 1.25rem;
   }
   .hero h1 {
     font-size: clamp(1.8rem, 4.5vw, 2.8rem);
     font-weight: 700; line-height: 1.1;
     letter-spacing: -0.02em;
-    color: #fff8e7; margin-bottom: 1rem;
+    color: #f5f3ff; margin-bottom: 1rem;
   }
   .hero h1 em { font-style: normal; color: var(--amber); }
   .hero-sub {
@@ -114,11 +117,11 @@
   .panel-label {
     font-family: 'Inconsolata', monospace;
     font-size: 10px; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--amber);
+    text-transform: uppercase; color: var(--purple);
     margin-bottom: 4px;
   }
   .panel-title {
-    font-size: 15px; font-weight: 600; color: #fff8e7;
+    font-size: 15px; font-weight: 600; color: #f5f3ff;
   }
   .panel-body { padding: 1.25rem; }
 
@@ -144,7 +147,7 @@
   input[type=range] {
     -webkit-appearance: none; appearance: none;
     width: 100%; height: 4px; outline: none;
-    background: rgba(251,191,36,0.15);
+    background: rgba(167,139,250,0.15);
     border-radius: 2px; cursor: pointer;
   }
   input[type=range]::-webkit-slider-thumb {
@@ -167,15 +170,15 @@
 
   select {
     width: 100%; padding: 8px 12px;
-    background: rgba(251,191,36,0.06);
+    background: rgba(167,139,250,0.06);
     border: 1px solid var(--border2);
     border-radius: 8px; color: var(--text);
     font-family: 'Space Grotesk', sans-serif;
     font-size: 14px; cursor: pointer; outline: none;
     -webkit-appearance: none; appearance: none;
   }
-  select:focus { border-color: var(--amber); }
-  select option { background: #1a1600; }
+  select:focus { border-color: var(--purple); }
+  select option { background: #0e0e1a; }
 
   .field-note { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
@@ -188,7 +191,7 @@
   .result-card:last-of-type { margin-bottom: 0; }
   .result-card.negative { border-color: rgba(248,113,113,0.25); background: rgba(248,113,113,0.04); }
   .result-card.positive { border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.04); }
-  .result-card.neutral  { border-color: var(--border2); background: rgba(251,191,36,0.04); }
+  .result-card.neutral  { border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.04); }
 
   .result-label {
     font-family: 'Inconsolata', monospace;
@@ -197,7 +200,7 @@
   }
   .result-card.negative .result-label { color: var(--red); }
   .result-card.positive .result-label { color: var(--green); }
-  .result-card.neutral  .result-label { color: var(--amber2); }
+  .result-card.neutral  .result-label { color: var(--purple); }
 
   .result-num {
     font-family: 'Space Grotesk', sans-serif;
@@ -207,7 +210,7 @@
   }
   .result-card.negative .result-num { color: var(--red2); }
   .result-card.positive .result-num { color: var(--green2); }
-  .result-card.neutral  .result-num { color: var(--amber3); }
+  .result-card.neutral  .result-num { color: var(--purple2); }
 
   .result-desc { font-size: 12px; color: var(--muted2); line-height: 1.5; }
 
@@ -246,9 +249,9 @@
   }
   .explainer-num {
     font-family: 'Inconsolata', monospace;
-    font-size: 11px; color: var(--amber); margin-bottom: 6px;
+    font-size: 11px; color: var(--purple); margin-bottom: 6px;
   }
-  .explainer-title { font-size: 13.5px; font-weight: 600; color: #fff8e7; margin-bottom: 4px; }
+  .explainer-title { font-size: 13.5px; font-weight: 600; color: #f5f3ff; margin-bottom: 4px; }
   .explainer-body { font-size: 12.5px; color: var(--muted2); line-height: 1.55; }
 
   /* ── CTA ── */
@@ -264,7 +267,7 @@
   }
   .cta-inner h2 {
     font-size: 1.5rem; font-weight: 700;
-    color: #fff8e7; margin-bottom: 0.75rem;
+    color: #f5f3ff; margin-bottom: 0.75rem;
     letter-spacing: -0.01em;
   }
   .cta-inner h2 em { font-style: normal; color: var(--amber); }
@@ -274,16 +277,16 @@
   .waitlist-form input[type=text],
   .waitlist-form input[type=email] {
     flex: 1; min-width: 180px; padding: 10px 14px;
-    background: rgba(251,191,36,0.06);
+    background: rgba(167,139,250,0.06);
     border: 1px solid var(--border2); border-radius: 8px;
     color: var(--text); font-family: 'Space Grotesk', sans-serif;
     font-size: 14px; outline: none;
   }
-  .waitlist-form input:focus { border-color: var(--amber); }
+  .waitlist-form input:focus { border-color: var(--purple); }
   .waitlist-form input::placeholder { color: var(--muted); }
   .btn-amber {
     padding: 10px 24px; border-radius: 8px;
-    background: var(--amber); color: #080600;
+    background: var(--amber); color: #08080f;
     font-family: 'Inconsolata', monospace;
     font-size: 13px; font-weight: 600;
     border: none; cursor: pointer;
@@ -305,7 +308,7 @@
     font-family: 'Inconsolata', monospace;
     font-size: 12px; color: var(--muted);
   }
-  footer a { color: var(--amber); text-decoration: none; }
+  footer a { color: var(--purple); text-decoration: none; }
 
   @media (max-width: 600px) {
     nav { padding: 0 1rem; }
@@ -396,7 +399,6 @@
           <option value="CAD">Canada → Nigeria (CAD to NGN)</option>
         </select>
       </div>
-
 
     </div>
   </div>
